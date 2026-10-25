@@ -20,7 +20,7 @@ function App() {
       <PageLayout>
         <Routes>
           <Route path="/" element={<BoardPage items={items} />} />
-          <Route path="/items/:id" element={<ItemDetailsPage />} />
+          <Route path="/items/:id" element={<ItemDetailsPage items={items} />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/post-item" element={<PostItemPage />} />

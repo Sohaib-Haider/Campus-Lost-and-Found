@@ -5,7 +5,7 @@ steps:
   - step_03_make_header_and_page_styles: done
   - step_04_build_item_board: done
   - step_05_add_search_and_filters: done
-  - step_06_make_item_details_page: pending
+  - step_06_make_item_details_page: done
   - step_07_make_register_form: pending
   - step_08_make_login_form: pending
   - step_09_add_demo_login_and_logout: pending

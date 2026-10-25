@@ -202,3 +202,38 @@ textarea {
   border-radius: 8px;
   background: white;
 }
+
+
+.item-details {
+  padding: 24px;
+  border: 1px solid #dce3de;
+  border-radius: 8px;
+  background: white;
+  overflow-wrap: anywhere;
+}
+
+.item-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.item-details h1 {
+  margin-bottom: 12px;
+}
+
+.details-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 24px;
+  margin: 20px 0 0;
+}
+
+.details-list dt {
+  font-weight: bold;
+}
+
+.details-list dd {
+  margin: 0;
+}
