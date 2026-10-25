@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import PageLayout from './components/PageLayout.jsx'
 import BoardPage from './pages/BoardPage.jsx'
 import ItemDetailsPage from './pages/ItemDetailsPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
@@ -12,7 +13,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx'
 function App() {
   return (
     <BrowserRouter>
-      <main>
+      <PageLayout>
         <Routes>
           <Route path="/" element={<BoardPage />} />
           <Route path="/items/:id" element={<ItemDetailsPage />} />
@@ -23,7 +24,7 @@ function App() {
           <Route path="/items/:id/edit" element={<EditItemPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </main>
+      </PageLayout>
     </BrowserRouter>
   )
 }
