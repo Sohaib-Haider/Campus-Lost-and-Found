@@ -1,7 +1,7 @@
 ---
 steps:
   - step_01_set_up_react: done
-  - step_02_add_pages_and_routes: pending
+  - step_02_add_pages_and_routes: done
   - step_03_make_header_and_page_styles: pending
   - step_04_build_item_board: pending
   - step_05_add_search_and_filters: pending
@@ -28,7 +28,7 @@ This project uses only the MERN stack: MongoDB, Express, React, and Node.js. Kee
 
 Build the Campus Lost & Found Board in React. Students can browse lost and found items, open their details, and use the poster's contact details. They can also try adding and managing posts with a demo login.
 
-All 20 steps below are frontend development work. Step 1 is done: the React app runs and shows the project heading. Steps 2 to 20 are pending. Mark a step done only when its code is written and it works in the browser.
+All 20 steps below are frontend development work. Steps 1 and 2 are done: the React app runs, and all page routes show their placeholder pages. Steps 3 to 20 are pending. Mark a step done only when its code is written and it works in the browser.
 
 ## What to use
 
@@ -262,5 +262,6 @@ Remove unused imports, starter files, and temporary console messages. Keep names
 Run the frontend build and fix any errors. Run the configured lint check too, if the project has one. Update the frontmatter so it matches the work actually finished.
 
 The frontend is finished when the demo flows work, the pages fit small screens, and the build passes.
+
 
 
