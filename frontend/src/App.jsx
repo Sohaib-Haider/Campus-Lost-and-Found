@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import sampleItems from './data/sampleItems.js'
 import PageLayout from './components/PageLayout.jsx'
 import BoardPage from './pages/BoardPage.jsx'
 import ItemDetailsPage from './pages/ItemDetailsPage.jsx'
@@ -11,11 +13,13 @@ import NotFoundPage from './pages/NotFoundPage.jsx'
 
 
 function App() {
+  const [items, setItems] = useState(sampleItems)
+
   return (
     <BrowserRouter>
       <PageLayout>
         <Routes>
-          <Route path="/" element={<BoardPage />} />
+          <Route path="/" element={<BoardPage items={items} />} />
           <Route path="/items/:id" element={<ItemDetailsPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
