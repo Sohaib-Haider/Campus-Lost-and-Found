@@ -182,3 +182,23 @@ textarea {
   display: inline-block;
   margin-top: 12px;
 }
+
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #dce3de;
+  border-radius: 8px;
+  background: white;
+}
+
+.empty-message {
+  padding: 24px;
+  border: 1px dashed #aebdb3;
+  border-radius: 8px;
+  background: white;
+}
