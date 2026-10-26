@@ -8,7 +8,7 @@ steps:
   - step_06_make_item_details_page: done
   - step_07_make_register_form: done
   - step_08_make_login_form: done
-  - step_09_add_demo_login_and_logout: pending
+  - step_09_add_demo_login_and_logout: done
   - step_10_add_private_page_checks: pending
   - step_11_make_item_form: pending
   - step_12_show_new_posts_on_board: pending
@@ -28,7 +28,7 @@ This project uses only the MERN stack: MongoDB, Express, React, and Node.js. Kee
 
 Build the Campus Lost & Found Board in React. Students can browse lost and found items, open their details, and use the poster's contact details. They can also try adding and managing posts with a demo login.
 
-All 20 steps below are frontend development work. Steps 1 to 8 are done: the app runs, the page routes work, the shared header and basic styles are in place, the item board has search and filters, the item details page works, and the register and login forms check their inputs. Steps 9 to 20 are pending. Mark a step done only when its code is written and it works in the browser.
+All 20 steps below are frontend development work. Steps 1 to 9 are done: the board, filters, item details, and forms work, and demo login, registration, and logout update the header. Steps 10 to 20 are pending. Mark a step done only when its code is written and it works in the browser.
 
 ## What to use
 

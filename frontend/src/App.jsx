@@ -14,15 +14,20 @@ import NotFoundPage from './pages/NotFoundPage.jsx'
 
 function App() {
   const [items, setItems] = useState(sampleItems)
+  const [currentUser, setCurrentUser] = useState(null)
+
+  function handleLogout() {
+    setCurrentUser(null)
+  }
 
   return (
     <BrowserRouter>
-      <PageLayout>
+      <PageLayout currentUser={currentUser} onLogout={handleLogout}>
         <Routes>
           <Route path="/" element={<BoardPage items={items} />} />
           <Route path="/items/:id" element={<ItemDetailsPage items={items} />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage onRegister={setCurrentUser} />} />
+          <Route path="/login" element={<LoginPage onLogin={setCurrentUser} />} />
           <Route path="/post-item" element={<PostItemPage />} />
           <Route path="/my-posts" element={<MyPostsPage />} />
           <Route path="/items/:id/edit" element={<EditItemPage />} />

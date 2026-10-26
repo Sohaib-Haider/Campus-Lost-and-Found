@@ -1,13 +1,14 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
-function LoginPage() {
+function LoginPage({ onLogin }) {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const [errors, setErrors] = useState({})
-  const [message, setMessage] = useState('')
+
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -24,10 +25,15 @@ function LoginPage() {
     }
 
     setErrors(newErrors)
-    setMessage('')
+
 
     if (Object.keys(newErrors).length === 0) {
-      setMessage('Your details look good. Login is not connected yet, so you have not been logged in.')
+      onLogin({
+        id: 'user-1',
+        name: 'Demo Student',
+        email: 'student@example.com',
+      })
+      navigate('/')
     }
   }
 
@@ -35,7 +41,7 @@ function LoginPage() {
   return (
     <section className="account-form">
       <h1>Login</h1>
-      <p>This is a demo form. It does not log you in yet.</p>
+      <p>This is a demo. Any valid email and non-empty password will open the sample student session. No real account is checked.</p>
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-field">
@@ -46,10 +52,7 @@ function LoginPage() {
             autoComplete="username"
             required
             value={email}
-            onChange={(event) => {
-              setEmail(event.target.value)
-              setMessage('')
-            }}
+            onChange={(event) => setEmail(event.target.value)}
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'login-email-error' : undefined}
           />
@@ -64,10 +67,7 @@ function LoginPage() {
             autoComplete="current-password"
             required
             value={password}
-            onChange={(event) => {
-              setPassword(event.target.value)
-              setMessage('')
-            }}
+            onChange={(event) => setPassword(event.target.value)}
             aria-invalid={Boolean(errors.password)}
             aria-describedby={errors.password ? 'login-password-error' : undefined}
           />
@@ -75,7 +75,7 @@ function LoginPage() {
         </div>
 
         <button type="submit">Login</button>
-        <p role="status">{message}</p>
+
       </form>
 
       <p>Need an account? <Link to="/register">Register</Link></p>

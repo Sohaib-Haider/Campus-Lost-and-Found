@@ -1,10 +1,10 @@
 import Header from './Header.jsx'
 
 
-function PageLayout({ children }) {
+function PageLayout({ children, currentUser, onLogout }) {
   return (
     <>
-      <Header />
+      <Header currentUser={currentUser} onLogout={onLogout} />
 
       <main className="page-content">{children}</main>
     </>
