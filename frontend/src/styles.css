@@ -237,3 +237,35 @@ textarea {
 .details-list dd {
   margin: 0;
 }
+
+
+.account-form {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid #dce3de;
+  border-radius: 8px;
+  background: white;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.field-error,
+.field-hint {
+  margin: 6px 0 0;
+  font-size: 14px;
+}
+
+.field-error {
+  color: #a12929;
+}
+
+.field-hint {
+  color: #5a6b62;
+}
+
+input[aria-invalid="true"] {
+  border-color: #a12929;
+}
