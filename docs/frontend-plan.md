@@ -9,7 +9,7 @@ steps:
   - step_07_make_register_form: done
   - step_08_make_login_form: done
   - step_09_add_demo_login_and_logout: done
-  - step_10_add_private_page_checks: pending
+  - step_10_add_private_page_checks: done
   - step_11_make_item_form: pending
   - step_12_show_new_posts_on_board: pending
   - step_13_make_my_posts_page: pending
