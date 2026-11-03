@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import sampleItems from './data/sampleItems.js'
 import PageLayout from './components/PageLayout.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 import BoardPage from './pages/BoardPage.jsx'
 import ItemDetailsPage from './pages/ItemDetailsPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
@@ -28,9 +29,30 @@ function App() {
           <Route path="/items/:id" element={<ItemDetailsPage items={items} />} />
           <Route path="/register" element={<RegisterPage onRegister={setCurrentUser} />} />
           <Route path="/login" element={<LoginPage onLogin={setCurrentUser} />} />
-          <Route path="/post-item" element={<PostItemPage />} />
-          <Route path="/my-posts" element={<MyPostsPage />} />
-          <Route path="/items/:id/edit" element={<EditItemPage />} />
+          <Route
+            path="/post-item"
+            element={
+              <ProtectedRoute currentUser={currentUser}>
+                <PostItemPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-posts"
+            element={
+              <ProtectedRoute currentUser={currentUser}>
+                <MyPostsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/items/:id/edit"
+            element={
+              <ProtectedRoute currentUser={currentUser}>
+                <EditItemPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </PageLayout>
