@@ -1,9 +1,10 @@
 import { Link, useParams } from 'react-router-dom'
 
 
-function ItemDetailsPage({ items }) {
+function ItemDetailsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
   const { id } = useParams()
   const item = items.find((currentItem) => currentItem.id === id)
+
 
   if (!item) {
     return (
@@ -15,7 +16,10 @@ function ItemDetailsPage({ items }) {
     )
   }
 
+  const isOwner = item.ownerId === currentUser.id
+
   const typeLabel = item.type === 'lost' ? 'Lost' : 'Found'
+
 
   return (
     <>
@@ -47,6 +51,22 @@ function ItemDetailsPage({ items }) {
           <dt>Status</dt>
           <dd>{item.returned ? 'Returned to owner' : 'Still active'}</dd>
         </dl>
+
+        {isOwner && (
+          <div className="item-actions">
+            <button type="button" onClick={() => {
+              if (window.confirm('Are you sure you want to delete this item?')) {
+                onDeleteItem(item.id)
+              }
+            }}>Delete</button>
+
+            {!item.returned && (
+              <button type="button" onClick={() => {
+                onReturnItem(item.id)
+              }}>Mark as returned</button>
+            )}
+          </div>
+        )}
       </article>
     </>
   )

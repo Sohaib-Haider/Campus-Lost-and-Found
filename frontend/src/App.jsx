@@ -35,6 +35,32 @@ function App() {
     )
   }
 
+
+  function handleDeleteItem(id) {
+    const item = items.find((currentItem) => currentItem.id === id)
+
+    if (!item || item.ownerId !== currentUser.id) {
+      return
+    }
+
+    setItems((currentItems) => currentItems.filter((currentItem) => currentItem.id !== id))
+  }
+
+
+  function handleReturnItem(id) {
+    const item = items.find((currentItem) => currentItem.id === id)
+
+    if (!item || item.ownerId !== currentUser.id || item.returned) {
+      return
+    }
+
+    setItems((currentItems) =>
+      currentItems.map((currentItem) =>
+        currentItem.id === id ? { ...currentItem, returned: true } : currentItem
+      )
+    )
+  }
+
   function handleLogout() {
     setCurrentUser(null)
   }
@@ -44,7 +70,7 @@ function App() {
       <PageLayout currentUser={currentUser} onLogout={handleLogout}>
         <Routes>
           <Route path="/" element={<BoardPage items={items} />} />
-          <Route path="/items/:id" element={<ItemDetailsPage items={items} />} />
+          <Route path="/items/:id" element={<ItemDetailsPage items={items} currentUser={currentUser} onDeleteItem={handleDeleteItem} onReturnItem={handleReturnItem} />} />
           <Route path="/register" element={<RegisterPage onRegister={setCurrentUser} />} />
           <Route path="/login" element={<LoginPage onLogin={setCurrentUser} />} />
           <Route
@@ -55,11 +81,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/my-posts"
+          <Route path="/my-posts"
             element={
               <ProtectedRoute currentUser={currentUser}>
-                <MyPostsPage items={items} currentUser={currentUser} />
+                <MyPostsPage items={items} currentUser={currentUser} onDeleteItem={handleDeleteItem} onReturnItem={handleReturnItem} />
               </ProtectedRoute>
             }
           />

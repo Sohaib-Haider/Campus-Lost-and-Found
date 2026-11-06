@@ -14,7 +14,7 @@ steps:
   - step_12_show_new_posts_on_board: done
   - step_13_make_my_posts_page: done
   - step_14_add_edit_post_page: done
-  - step_15_add_delete_and_return_buttons: pending
+  - step_15_add_delete_and_return_buttons: done
   - step_16_save_demo_changes_in_browser: pending
   - step_17_fix_phone_layouts: pending
   - step_18_improve_forms_and_keyboard_use: pending

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 
-function MyPostsPage({ items, currentUser }) {
+function MyPostsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
 
 
   const myItems = items.filter((item) => item.ownerId === currentUser.id)
@@ -32,6 +32,18 @@ function MyPostsPage({ items, currentUser }) {
 
               <Link to={`/items/${item.id}`}>View details</Link>
               <Link to={`/items/${item.id}/edit`}>Edit</Link>
+
+              <button type="button" onClick={() => {
+                if (window.confirm('Are you sure you want to delete this item?')) {
+                  onDeleteItem(item.id)
+                }
+              }}>Delete</button>
+
+              {!item.returned && (
+                <button type="button" onClick={() => {
+                  onReturnItem(item.id)
+                }}>Mark as returned</button>
+              )}
             </article>
           ))}
         </div>
