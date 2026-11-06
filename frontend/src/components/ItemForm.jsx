@@ -2,20 +2,32 @@ import { useState } from 'react'
 import { categories, locations } from '../data/sampleItems.js'
 
 
-function ItemForm({ onSave }) {
-  const [type, setType] = useState('')
+function ItemForm({ onSave, item }) {
+  const [type, setType] = useState(item ? item.type : '')
 
-  const [title, setTitle] = useState('')
 
-  const [description, setDescription] = useState('')
 
-  const [category, setCategory] = useState('')
+  const [title, setTitle] = useState(item ? item.title : '')
 
-  const [location, setLocation] = useState('')
 
-  const [itemDate, setItemDate] = useState('')
 
-  const [contact, setContact] = useState('')
+  const [description, setDescription] = useState(item ? item.description : '')
+
+
+
+  const [category, setCategory] = useState(item ? item.category : '')
+
+
+
+  const [location, setLocation] = useState(item ? item.location : '')
+
+
+
+  const [itemDate, setItemDate] = useState(item ? item.itemDate : '')
+
+
+
+  const [contact, setContact] = useState(item ? item.contact : '')
 
   const [errors, setErrors] = useState({})
 
@@ -78,7 +90,7 @@ function ItemForm({ onSave }) {
 
   return (
     <form className="account-form" onSubmit={handleSubmit} noValidate>
-      <h1>Post an Item</h1>
+      <h1>{item ? 'Edit Item' : 'Post an Item'}</h1>
 
       <div className="form-field">
         <label htmlFor="form-type">Lost or found</label>
@@ -136,7 +148,7 @@ function ItemForm({ onSave }) {
         {errors.contact && <p className="field-error">{errors.contact}</p>}
       </div>
 
-      <button type="submit">Post Item</button>
+      <button type="submit">{item ? 'Update Item' : 'Post Item'}</button>
 
     </form>
   )

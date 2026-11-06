@@ -27,6 +27,14 @@ function App() {
     setItems((currentItems) => [itemWithOwner, ...currentItems])
   }
 
+  function handleEditItem(updatedItem) {
+    setItems((currentItems) =>
+      currentItems.map((currentItem) =>
+        currentItem.id === updatedItem.id ? updatedItem : currentItem
+      )
+    )
+  }
+
   function handleLogout() {
     setCurrentUser(null)
   }
@@ -59,7 +67,7 @@ function App() {
             path="/items/:id/edit"
             element={
               <ProtectedRoute currentUser={currentUser}>
-                <EditItemPage />
+                <EditItemPage items={items} currentUser={currentUser} onEditItem={handleEditItem} />
               </ProtectedRoute>
             }
           />

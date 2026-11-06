@@ -31,6 +31,7 @@ function MyPostsPage({ items, currentUser }) {
               <p className="item-meta">{item.itemDate}</p>
 
               <Link to={`/items/${item.id}`}>View details</Link>
+              <Link to={`/items/${item.id}/edit`}>Edit</Link>
             </article>
           ))}
         </div>
