@@ -51,7 +51,7 @@ function App() {
             path="/my-posts"
             element={
               <ProtectedRoute currentUser={currentUser}>
-                <MyPostsPage />
+                <MyPostsPage items={items} currentUser={currentUser} />
               </ProtectedRoute>
             }
           />

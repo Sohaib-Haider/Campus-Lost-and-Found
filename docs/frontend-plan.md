@@ -12,7 +12,7 @@ steps:
   - step_10_add_private_page_checks: done
   - step_11_make_item_form: done
   - step_12_show_new_posts_on_board: done
-  - step_13_make_my_posts_page: pending
+  - step_13_make_my_posts_page: done
   - step_14_add_edit_post_page: pending
   - step_15_add_delete_and_return_buttons: pending
   - step_16_save_demo_changes_in_browser: pending
