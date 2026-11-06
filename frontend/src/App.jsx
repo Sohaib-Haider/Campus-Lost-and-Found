@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import sampleItems from './data/sampleItems.js'
 import PageLayout from './components/PageLayout.jsx'
@@ -12,11 +12,51 @@ import MyPostsPage from './pages/MyPostsPage.jsx'
 import EditItemPage from './pages/EditItemPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
+function readSaved(key, fallback) {
+  try {
+    const savedText = localStorage.getItem(key)
+
+    if (savedText === null) {
+      return fallback
+    }
+
+    return JSON.parse(savedText)
+  } catch {
+    return fallback
+  }
+}
 
 function App() {
-  const [items, setItems] = useState(sampleItems)
-  const [currentUser, setCurrentUser] = useState(null)
+  const [items, setItems] = useState(() => {
+    const savedItems = readSaved('lostFoundItems', sampleItems)
 
+    return Array.isArray(savedItems) ? savedItems : sampleItems
+  })
+  const [currentUser, setCurrentUser] = useState(() => readSaved('lostFoundUser', null))
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('lostFoundItems', JSON.stringify(items))
+    } catch {
+      return
+    }
+  }, [items])
+
+  useEffect(() => {
+    try {
+      if (currentUser) {
+        localStorage.setItem('lostFoundUser', JSON.stringify({
+          id: currentUser.id,
+          name: currentUser.name,
+          email: currentUser.email,
+        }))
+      } else {
+        localStorage.removeItem('lostFoundUser')
+      }
+    } catch {
+      return
+    }
+  }, [currentUser])
 
   function handleAddItem(newItem) {
     const itemWithOwner = {
@@ -28,13 +68,18 @@ function App() {
   }
 
   function handleEditItem(updatedItem) {
+    const item = items.find((currentItem) => currentItem.id === updatedItem.id)
+
+    if (!item || item.ownerId !== currentUser.id) {
+      return
+    }
+
     setItems((currentItems) =>
       currentItems.map((currentItem) =>
         currentItem.id === updatedItem.id ? updatedItem : currentItem
       )
     )
   }
-
 
   function handleDeleteItem(id) {
     const item = items.find((currentItem) => currentItem.id === id)
@@ -45,7 +90,6 @@ function App() {
 
     setItems((currentItems) => currentItems.filter((currentItem) => currentItem.id !== id))
   }
-
 
   function handleReturnItem(id) {
     const item = items.find((currentItem) => currentItem.id === id)
@@ -102,6 +146,5 @@ function App() {
     </BrowserRouter>
   )
 }
-
 
 export default App

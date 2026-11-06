@@ -2,7 +2,7 @@ import ItemForm from '../components/ItemForm.jsx'
 import { useNavigate } from 'react-router-dom'
 
 
-function PostItemPage({ currentUser, onAddItem }) {
+function PostItemPage({ onAddItem }) {
   const navigate = useNavigate()
 
 

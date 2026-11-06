@@ -47,11 +47,7 @@ function EditItemPage({ items, currentUser, onEditItem }) {
 
 
   return (
-    <>
-      <h1>Edit Item</h1>
-
-      <ItemForm item={item} onSave={handleSave} />
-    </>
+    <ItemForm item={item} onSave={handleSave} />
   )
 }
 

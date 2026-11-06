@@ -16,7 +16,7 @@ function ItemDetailsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
     )
   }
 
-  const isOwner = item.ownerId === currentUser.id
+  const isOwner = Boolean(currentUser) && item.ownerId === currentUser.id
 
   const typeLabel = item.type === 'lost' ? 'Lost' : 'Found'
 

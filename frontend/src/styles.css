@@ -275,3 +275,69 @@ textarea {
 input[aria-invalid="true"] {
   border-color: #a12929;
 }
+
+.item-card button {
+  margin: 12px 8px 0 0;
+}
+
+.item-card a + a {
+  margin-left: 12px;
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.details-list dd {
+  min-width: 0;
+}
+
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: #a12929;
+}
+
+@media (max-width: 600px) {
+  .header-content,
+  .page-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .header-content {
+    gap: 12px;
+  }
+
+  nav {
+    gap: 4px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .item-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-list {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .details-list dd {
+    margin-bottom: 12px;
+  }
+
+  .account-form,
+  .item-details {
+    padding: 16px;
+  }
+}

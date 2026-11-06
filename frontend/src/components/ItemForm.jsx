@@ -1,36 +1,22 @@
 import { useState } from 'react'
 import { categories, locations } from '../data/sampleItems.js'
 
-
 function ItemForm({ onSave, item }) {
   const [type, setType] = useState(item ? item.type : '')
 
-
-
   const [title, setTitle] = useState(item ? item.title : '')
-
-
 
   const [description, setDescription] = useState(item ? item.description : '')
 
-
-
   const [category, setCategory] = useState(item ? item.category : '')
-
-
 
   const [location, setLocation] = useState(item ? item.location : '')
 
-
-
   const [itemDate, setItemDate] = useState(item ? item.itemDate : '')
-
-
 
   const [contact, setContact] = useState(item ? item.contact : '')
 
   const [errors, setErrors] = useState({})
-
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -69,7 +55,6 @@ function ItemForm({ onSave, item }) {
 
     setErrors(newErrors)
 
-
     if (Object.keys(newErrors).length === 0) {
       const newItem = {
         id: crypto.randomUUID(),
@@ -87,69 +72,67 @@ function ItemForm({ onSave, item }) {
     }
   }
 
-
   return (
     <form className="account-form" onSubmit={handleSubmit} noValidate>
       <h1>{item ? 'Edit Item' : 'Post an Item'}</h1>
 
       <div className="form-field">
         <label htmlFor="form-type">Lost or found</label>
-        <select id="form-type" value={type} onChange={(event) => setType(event.target.value)}>
+        <select id="form-type" aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? 'form-type-error' : undefined} value={type} onChange={(event) => setType(event.target.value)}>
           <option value="">Pick one</option>
           <option value="lost">Lost</option>
           <option value="found">Found</option>
         </select>
-        {errors.type && <p className="field-error">{errors.type}</p>}
+        {errors.type && <p className="field-error" id="form-type-error">{errors.type}</p>}
       </div>
 
       <div className="form-field">
         <label htmlFor="form-title">Title</label>
-        <input id="form-title" value={title} onChange={(event) => setTitle(event.target.value)} />
-        {errors.title && <p className="field-error">{errors.title}</p>}
+        <input id="form-title" aria-invalid={Boolean(errors.title)} aria-describedby={errors.title ? 'form-title-error' : undefined} value={title} onChange={(event) => setTitle(event.target.value)} />
+        {errors.title && <p className="field-error" id="form-title-error">{errors.title}</p>}
       </div>
 
       <div className="form-field">
         <label htmlFor="form-description">Description</label>
-        <textarea id="form-description" value={description} onChange={(event) => setDescription(event.target.value)} />
-        {errors.description && <p className="field-error">{errors.description}</p>}
+        <textarea id="form-description" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? 'form-description-error' : undefined} value={description} onChange={(event) => setDescription(event.target.value)} />
+        {errors.description && <p className="field-error" id="form-description-error">{errors.description}</p>}
       </div>
 
       <div className="form-field">
         <label htmlFor="form-category">Category</label>
-        <select id="form-category" value={category} onChange={(event) => setCategory(event.target.value)}>
+        <select id="form-category" aria-invalid={Boolean(errors.category)} aria-describedby={errors.category ? 'form-category-error' : undefined} value={category} onChange={(event) => setCategory(event.target.value)}>
           <option value="">Pick one</option>
           {categories.map((categoryName) => (
             <option key={categoryName} value={categoryName}>{categoryName}</option>
           ))}
         </select>
-        {errors.category && <p className="field-error">{errors.category}</p>}
+        {errors.category && <p className="field-error" id="form-category-error">{errors.category}</p>}
       </div>
 
       <div className="form-field">
         <label htmlFor="form-location">Location</label>
-        <select id="form-location" value={location} onChange={(event) => setLocation(event.target.value)}>
+        <select id="form-location" aria-invalid={Boolean(errors.location)} aria-describedby={errors.location ? 'form-location-error' : undefined} value={location} onChange={(event) => setLocation(event.target.value)}>
           <option value="">Pick one</option>
           {locations.map((locationName) => (
             <option key={locationName} value={locationName}>{locationName}</option>
           ))}
         </select>
-        {errors.location && <p className="field-error">{errors.location}</p>}
+        {errors.location && <p className="field-error" id="form-location-error">{errors.location}</p>}
       </div>
 
       <div className="form-field">
         <label htmlFor="form-date">Date</label>
-        <input id="form-date" type="date" value={itemDate} onChange={(event) => setItemDate(event.target.value)} />
-        {errors.itemDate && <p className="field-error">{errors.itemDate}</p>}
+        <input id="form-date" aria-invalid={Boolean(errors.itemDate)} aria-describedby={errors.itemDate ? 'form-date-error' : undefined} type="date" value={itemDate} onChange={(event) => setItemDate(event.target.value)} />
+        {errors.itemDate && <p className="field-error" id="form-date-error">{errors.itemDate}</p>}
       </div>
 
       <div className="form-field">
         <label htmlFor="form-contact">Contact detail</label>
-        <input id="form-contact" value={contact} onChange={(event) => setContact(event.target.value)} />
-        {errors.contact && <p className="field-error">{errors.contact}</p>}
+        <input id="form-contact" aria-invalid={Boolean(errors.contact)} aria-describedby={errors.contact ? 'form-contact-error' : undefined} value={contact} onChange={(event) => setContact(event.target.value)} />
+        {errors.contact && <p className="field-error" id="form-contact-error">{errors.contact}</p>}
       </div>
 
       <button type="submit">{item ? 'Update Item' : 'Post Item'}</button>
-
     </form>
   )
 }
