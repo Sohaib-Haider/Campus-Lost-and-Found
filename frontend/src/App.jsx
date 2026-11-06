@@ -17,6 +17,16 @@ function App() {
   const [items, setItems] = useState(sampleItems)
   const [currentUser, setCurrentUser] = useState(null)
 
+
+  function handleAddItem(newItem) {
+    const itemWithOwner = {
+      ...newItem,
+      ownerId: currentUser.id,
+    }
+
+    setItems((currentItems) => [itemWithOwner, ...currentItems])
+  }
+
   function handleLogout() {
     setCurrentUser(null)
   }
@@ -33,7 +43,7 @@ function App() {
             path="/post-item"
             element={
               <ProtectedRoute currentUser={currentUser}>
-                <PostItemPage />
+                <PostItemPage currentUser={currentUser} onAddItem={handleAddItem} />
               </ProtectedRoute>
             }
           />
