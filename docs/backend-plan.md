@@ -1,7 +1,7 @@
 ---
 steps:
   - step_01_set_up_backend: done
-  - step_02_connect_mongodb: pending
+  - step_02_connect_mongodb: done
   - step_03_make_user_model: pending
   - step_04_add_registration: pending
   - step_05_add_login: pending
@@ -26,7 +26,7 @@ This project uses only the MERN stack: MongoDB, Express, React, and Node.js. Kee
 
 Build the backend for the Campus Lost & Found Board and connect it to the finished React frontend. Students should be able to use real accounts and save their posts in MongoDB.
 
-There are 18 steps. Step 1 is done: the backend packages are installed, the server starts, and the health route returns the expected response. Steps 2 to 18 are pending. Mark a step done only after its code is written and its behaviour has been checked. Writing this plan does not count as a development step.
+There are 18 steps. Steps 1 and 2 are done: the backend starts after connecting to local MongoDB, the health route works, and frontend CORS is configured. Steps 3 to 18 are pending. Mark a step done only after its code is written and its behaviour has been checked. Writing this plan does not count as a development step.
 
 ## What to use
 
@@ -133,11 +133,20 @@ Make `server.js` with Express and JSON request handling. Add a small `/api/healt
 
 ### Step 02 Connect MongoDB
 
+Completed: local MongoDB is running, the backend connects before listening, the health route returns HTTP 200, and frontend CORS works. Syntax checks and the unavailable-database startup check passed. Real settings are in the ignored .env file; example settings are in .env.example.
+
 Make `config/db.js` and connect to MongoDB using Mongoose. Read `MONGO_URI`, `PORT`, `JWT_SECRET`, and `FRONTEND_URL` from environment settings. Start listening only after the database connects. Show a useful startup error if the connection fails.
 
 Keep actual values in `.env`. Add `.env` and `node_modules` to the backend ignore file. Put example values in `.env.example`. Allow browser requests from the configured frontend address through cors.
 
 Check that the server starts with a working database address and fails clearly with a bad one. A local MongoDB database is enough; we do not need to add hosting to this plan.
+Local setup on this computer: MongoDB runs from `D:\MongoDB\bin\mongod.exe` and saves data in `D:\MongoDB\data`. It is a portable setup, not a Windows service, and listens only on `127.0.0.1:27017`. After restarting Windows, open PowerShell and start it with:
+
+```powershell
+& 'D:\MongoDB\bin\mongod.exe' --dbpath 'D:\MongoDB\data' --bind_ip 127.0.0.1 --port 27017
+```
+
+Keep that terminal open while using the database. In another terminal, run `npm run dev` from the backend folder. The database files stay outside the Git repository.
 
 ### Step 03 Make the user model
 
