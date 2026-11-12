@@ -144,4 +144,39 @@ async function updateItem(req, res) {
   }
 }
 
-export { createItem, getItems, getMyItems, getItem, updateItem }
+
+async function deleteItem(req, res) {
+  try {
+    const item = await findOwnedItem(req, res)
+
+    if (!item) {
+      return
+    }
+
+    await item.deleteOne()
+
+    return res.status(200).json({ message: 'Item deleted.' })
+  } catch {
+    return res.status(500).json({ message: 'Could not delete the item right now. Please try again.' })
+  }
+}
+
+
+async function markReturned(req, res) {
+  try {
+    const item = await findOwnedItem(req, res)
+
+    if (!item) {
+      return
+    }
+
+    item.returned = true
+    await item.save()
+
+    return res.status(200).json({ item })
+  } catch {
+    return res.status(500).json({ message: 'Could not update the item right now. Please try again.' })
+  }
+}
+
+export { createItem, getItems, getMyItems, getItem, updateItem, deleteItem, markReturned }

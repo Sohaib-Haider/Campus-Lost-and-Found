@@ -11,7 +11,7 @@ steps:
   - step_09_add_board_search_and_filters: done
   - step_10_add_item_details_and_my_posts: done
   - step_11_add_editing_a_post: done
-  - step_12_add_delete_and_return_actions: pending
+  - step_12_add_delete_and_return_actions: done
   - step_13_finish_api_error_handling: pending
   - step_14_connect_account_forms_and_sessions: pending
   - step_15_connect_board_and_item_details: pending
