@@ -3,7 +3,7 @@ steps:
   - step_01_set_up_backend: done
   - step_02_connect_mongodb: done
   - step_03_make_user_model: done
-  - step_04_add_registration: pending
+  - step_04_add_registration: done
   - step_05_add_login: pending
   - step_06_check_logged_in_users: pending
   - step_07_make_item_model: pending
@@ -26,7 +26,7 @@ This project uses only the MERN stack: MongoDB, Express, React, and Node.js. Kee
 
 Build the backend for the Campus Lost & Found Board and connect it to the finished React frontend. Students should be able to use real accounts and save their posts in MongoDB.
 
-There are 18 steps. Steps 1 to 3 are done: the backend connects to local MongoDB, the health route and frontend CORS work, and the user model has been checked. Steps 4 to 18 are pending. Mark a step done only after its code is written and its behaviour has been checked. Writing this plan does not count as a development step.
+There are 18 steps. Steps 1 to 4 are done: the backend connects to local MongoDB, the user model is in place, and registration validates inputs, hashes passwords, and returns a JWT. Steps 5 to 18 are pending. Mark a step done only after its code is written and its behaviour has been checked. Writing this plan does not count as a development step.
 
 ## What to use
 
