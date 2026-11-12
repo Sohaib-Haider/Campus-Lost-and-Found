@@ -66,4 +66,62 @@ async function register(req, res) {
   }
 }
 
-export { register }
+
+async function login(req, res) {
+  const { email, password } = req.body || {}
+  const errors = {}
+
+  if (typeof email !== 'string' || !email.trim()) {
+    errors.email = 'Please enter your email.'
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    errors.email = 'Please enter a valid email address.'
+  }
+
+  if (typeof password !== 'string' || !password.trim()) {
+    errors.password = 'Please enter your password.'
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ message: 'Please check your details.', errors })
+  }
+
+
+  try {
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: 'Login is unavailable right now.' })
+    }
+
+    const savedEmail = email.trim().toLowerCase()
+    const user = await User.findOne({ email: savedEmail }).select('+passwordHash')
+
+    if (!user || Buffer.byteLength(password, 'utf8') > 72) {
+      return res.status(401).json({ message: 'Email or password is incorrect.' })
+    }
+
+    const passwordMatches = await bcrypt.compare(password, user.passwordHash)
+
+    if (!passwordMatches) {
+      return res.status(401).json({ message: 'Email or password is incorrect.' })
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' })
+
+    return res.status(200).json({
+      user: { id: user.id, name: user.name, email: user.email },
+      token,
+    })
+  } catch {
+    return res.status(500).json({ message: 'Could not log in right now. Please try again.' })
+  }
+}
+
+
+function getCurrentUser(req, res) {
+  const user = req.user
+
+  res.status(200).json({
+    user: { id: user.id, name: user.name, email: user.email },
+  })
+}
+
+export { register, login, getCurrentUser }
