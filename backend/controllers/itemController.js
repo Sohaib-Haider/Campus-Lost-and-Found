@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import Item, { categories, locations, types } from '../models/Item.js'
 import { checkItemInput } from '../utils/itemValidation.js'
 
@@ -67,4 +68,34 @@ async function getItems(req, res) {
   }
 }
 
-export { createItem, getItems }
+
+async function getMyItems(req, res) {
+  try {
+    const items = await Item.find({ ownerId: req.user.id }).sort({ createdAt: -1, _id: -1 })
+
+    return res.status(200).json({ items })
+  } catch {
+    return res.status(500).json({ message: 'Could not load your posts right now. Please try again.' })
+  }
+}
+
+
+async function getItem(req, res) {
+  if (!mongoose.isObjectIdOrHexString(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid item ID.' })
+  }
+
+  try {
+    const item = await Item.findById(req.params.id)
+
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found.' })
+    }
+
+    return res.status(200).json({ item })
+  } catch {
+    return res.status(500).json({ message: 'Could not load the item right now. Please try again.' })
+  }
+}
+
+export { createItem, getItems, getMyItems, getItem }
