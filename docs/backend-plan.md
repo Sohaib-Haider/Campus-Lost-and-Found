@@ -7,7 +7,7 @@ steps:
   - step_05_add_login: done
   - step_06_check_logged_in_users: done
   - step_07_make_item_model: done
-  - step_08_add_posting_an_item: pending
+  - step_08_add_posting_an_item: done
   - step_09_add_board_search_and_filters: pending
   - step_10_add_item_details_and_my_posts: pending
   - step_11_add_editing_a_post: pending
