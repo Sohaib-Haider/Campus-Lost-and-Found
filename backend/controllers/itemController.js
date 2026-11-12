@@ -98,4 +98,50 @@ async function getItem(req, res) {
   }
 }
 
-export { createItem, getItems, getMyItems, getItem }
+
+async function findOwnedItem(req, res) {
+  if (!mongoose.isObjectIdOrHexString(req.params.id)) {
+    res.status(400).json({ message: 'Invalid item ID.' })
+    return null
+  }
+
+  const item = await Item.findById(req.params.id)
+
+  if (!item) {
+    res.status(404).json({ message: 'Item not found.' })
+    return null
+  }
+
+  if (item.ownerId.toString() !== req.user.id) {
+    res.status(403).json({ message: 'You can only change your own posts.' })
+    return null
+  }
+
+  return item
+}
+
+
+async function updateItem(req, res) {
+  try {
+    const item = await findOwnedItem(req, res)
+
+    if (!item) {
+      return
+    }
+
+    const { errors, values } = checkItemInput(req.body)
+
+    if (errors) {
+      return res.status(400).json({ message: 'Please check your details.', errors })
+    }
+
+    item.set(values)
+    await item.save()
+
+    return res.status(200).json({ item })
+  } catch {
+    return res.status(500).json({ message: 'Could not update the item right now. Please try again.' })
+  }
+}
+
+export { createItem, getItems, getMyItems, getItem, updateItem }
