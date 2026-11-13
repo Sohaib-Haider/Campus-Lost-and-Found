@@ -1,21 +1,34 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import ItemForm from '../components/ItemForm.jsx'
 
 
-function EditItemPage({ items, currentUser, onEditItem }) {
+function EditItemPage({ item, itemLoading, currentUser, onEditItem, loadItem }) {
   const { id } = useParams()
-  const navigate = useNavigate()
 
 
-  const item = items.find((currentItem) => currentItem.id === id)
+  useEffect(() => {
+    loadItem(id)
+  }, [id, loadItem])
 
 
-  if (!item) {
+  if (itemLoading) {
     return (
       <>
+        <p><Link to="/">&larr; Back to the board</Link></p>
+        <p className="empty-message" role="status">Loading item...</p>
+      </>
+    )
+  }
+
+
+  if (!currentUser || !item) {
+    return (
+      <>
+        <p><Link to="/">&larr; Back to the board</Link></p>
         <h1>Item not found</h1>
         <p>We could not find an item with that ID.</p>
-        <p><Link to="/">Back to the board</Link></p>
+        <Link to="/">Back to the board</Link>
       </>
     )
   }
@@ -24,31 +37,26 @@ function EditItemPage({ items, currentUser, onEditItem }) {
   if (item.ownerId !== currentUser.id) {
     return (
       <>
+        <p><Link to="/">&larr; Back to the board</Link></p>
         <h1>Not your item</h1>
         <p>You can only edit your own posts.</p>
-        <p><Link to="/">Back to the board</Link></p>
+        <Link to="/">Back to the board</Link>
       </>
     )
   }
 
 
   function handleSave(updatedItem) {
-    const savedItem = {
-      ...updatedItem,
-      id: item.id,
-      ownerId: item.ownerId,
-      createdAt: item.createdAt,
-      returned: item.returned,
-    }
-
-    onEditItem(savedItem)
-    navigate(`/items/${item.id}`)
+    onEditItem(updatedItem, id)
   }
 
 
   return (
     <ItemForm item={item} onSave={handleSave} />
   )
+
+
 }
+
 
 export default EditItemPage

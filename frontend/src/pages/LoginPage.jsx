@@ -8,11 +8,14 @@ function LoginPage({ onLogin }) {
   const [password, setPassword] = useState('')
 
   const [errors, setErrors] = useState({})
+  const [formError, setFormError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
 
   function handleSubmit(event) {
     event.preventDefault()
     const newErrors = {}
+    setFormError(null)
 
     if (!email.trim()) {
       newErrors.email = 'Please enter your email.'
@@ -28,12 +31,20 @@ function LoginPage({ onLogin }) {
 
 
     if (Object.keys(newErrors).length === 0) {
+      setSubmitting(true)
+
       onLogin({
-        id: 'user-1',
-        name: 'Demo Student',
-        email: 'student@example.com',
+        email: email.trim(),
+        password,
+      }).catch((error) => {
+        setSubmitting(false)
+
+        if (error.errors) {
+          setErrors(error.errors)
+        } else {
+          setFormError(error.message || 'Login failed. Please try again.')
+        }
       })
-      navigate('/')
     }
   }
 
@@ -41,7 +52,8 @@ function LoginPage({ onLogin }) {
   return (
     <section className="account-form">
       <h1>Login</h1>
-      <p>This is a demo. Any valid email and non-empty password will open the sample student session. No real account is checked.</p>
+
+      {formError && <p className="field-error">{formError}</p>}
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-field">
@@ -74,13 +86,16 @@ function LoginPage({ onLogin }) {
           {errors.password && <p className="field-error" id="login-password-error">{errors.password}</p>}
         </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={submitting}>Login</button>
 
       </form>
 
       <p>Need an account? <Link to="/register">Register</Link></p>
     </section>
   )
+
+
 }
+
 
 export default LoginPage

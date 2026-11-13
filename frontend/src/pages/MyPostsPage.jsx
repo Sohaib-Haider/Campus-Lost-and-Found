@@ -1,24 +1,26 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 
-function MyPostsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
+function MyPostsPage({ items, onLoad, currentUser, onDeleteItem, onReturnItem }) {
 
-
-  const myItems = items.filter((item) => item.ownerId === currentUser.id)
+  useEffect(() => {
+    onLoad()
+  }, [onLoad])
 
 
   return (
     <>
       <h1>My Posts</h1>
 
-      {myItems.length === 0 ? (
+      {items.length === 0 ? (
         <div className="empty-message">
           <p>You have no posts yet.</p>
           <p><Link to="/post-item">Post Item</Link></p>
         </div>
       ) : (
         <div className="item-grid">
-          {myItems.map((item) => (
+          {items.map((item) => (
             <article key={item.id} className="item-card">
               <span className={`status-label status-${item.type}`}>
                 {item.type === 'lost' ? 'Lost' : 'Found'}
@@ -50,6 +52,9 @@ function MyPostsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
       )}
     </>
   )
+
+
 }
+
 
 export default MyPostsPage

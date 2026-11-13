@@ -1,20 +1,49 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 
-function ItemDetailsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
+function ItemDetailsPage({ item, itemLoading, itemError, loadItem, currentUser, onDeleteItem, onReturnItem }) {
   const { id } = useParams()
-  const item = items.find((currentItem) => currentItem.id === id)
+
+
+  useEffect(() => {
+    loadItem(id)
+  }, [id, loadItem])
+
+
+  if (itemLoading) {
+    return (
+      <>
+        <p><Link to="/">&larr; Back to the board</Link></p>
+        <p className="empty-message" role="status">Loading item...</p>
+      </>
+    )
+  }
+
+
+  if (itemError) {
+    return (
+      <>
+        <p><Link to="/">&larr; Back to the board</Link></p>
+        <h1>Item not found</h1>
+        <p>{itemError}</p>
+        <Link to="/">Back to the board</Link>
+      </>
+    )
+  }
 
 
   if (!item) {
     return (
       <>
+        <p><Link to="/">&larr; Back to the board</Link></p>
         <h1>Item not found</h1>
         <p>We could not find an item with that ID.</p>
         <Link to="/">Back to the board</Link>
       </>
     )
   }
+
 
   const isOwner = Boolean(currentUser) && item.ownerId === currentUser.id
 
@@ -70,6 +99,9 @@ function ItemDetailsPage({ items, currentUser, onDeleteItem, onReturnItem }) {
       </article>
     </>
   )
+
+
 }
+
 
 export default ItemDetailsPage

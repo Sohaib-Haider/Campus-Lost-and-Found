@@ -10,11 +10,14 @@ function RegisterPage({ onRegister }) {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const [errors, setErrors] = useState({})
+  const [formError, setFormError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
 
   function handleSubmit(event) {
     event.preventDefault()
     const newErrors = {}
+    setFormError(null)
 
     if (!name.trim()) {
       newErrors.name = 'Please enter your name.'
@@ -42,12 +45,22 @@ function RegisterPage({ onRegister }) {
 
 
     if (Object.keys(newErrors).length === 0) {
+      setSubmitting(true)
+
       onRegister({
-        id: crypto.randomUUID(),
         name: name.trim(),
         email: email.trim(),
+        password,
+        confirmPassword,
+      }).catch((error) => {
+        setSubmitting(false)
+
+        if (error.errors) {
+          setErrors(error.errors)
+        } else {
+          setFormError(error.message || 'Registration failed. Please try again.')
+        }
       })
-      navigate('/')
     }
   }
 
@@ -55,7 +68,8 @@ function RegisterPage({ onRegister }) {
   return (
     <section className="account-form">
       <h1>Register</h1>
-      <p>This is a demo. Your name and email will be used for a temporary session. No real account is created and your password is not saved.</p>
+
+      {formError && <p className="field-error">{formError}</p>}
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-field">
@@ -91,13 +105,16 @@ function RegisterPage({ onRegister }) {
           {errors.confirmPassword && <p className="field-error" id="confirm-password-error">{errors.confirmPassword}</p>}
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled={submitting}>Register</button>
 
       </form>
 
       <p>Already have an account? <Link to="/login">Login</Link></p>
     </section>
   )
+
+
 }
+
 
 export default RegisterPage

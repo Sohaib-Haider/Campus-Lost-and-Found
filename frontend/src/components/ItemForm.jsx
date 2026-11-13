@@ -56,8 +56,7 @@ function ItemForm({ onSave, item }) {
     setErrors(newErrors)
 
     if (Object.keys(newErrors).length === 0) {
-      const newItem = {
-        id: crypto.randomUUID(),
+      const formData = {
         title: title.trim(),
         description: description.trim(),
         category: category.trim(),
@@ -65,10 +64,8 @@ function ItemForm({ onSave, item }) {
         itemDate: itemDate.trim(),
         contact: contact.trim(),
         type: type,
-        returned: false,
-        createdAt: new Date().toISOString(),
       }
-      onSave(newItem)
+      onSave(formData)
     }
   }
 
