@@ -12,7 +12,7 @@ steps:
   - step_10_add_item_details_and_my_posts: done
   - step_11_add_editing_a_post: done
   - step_12_add_delete_and_return_actions: done
-  - step_13_finish_api_error_handling: pending
+  - step_13_finish_api_error_handling: done
   - step_14_connect_account_forms_and_sessions: pending
   - step_15_connect_board_and_item_details: pending
   - step_16_connect_posting_and_my_posts: pending
