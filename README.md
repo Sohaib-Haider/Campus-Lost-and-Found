@@ -69,8 +69,11 @@ In a second terminal:
 ```bash
 cd frontend
 npm install
+cp .env.example .env
 npm run dev
 ```
+
+`frontend/.env` sets `VITE_API_URL`, the address of the API (default `http://localhost:5000`). It is optional when the backend runs on port 5000.
 
 Open `http://localhost:5173`.
 

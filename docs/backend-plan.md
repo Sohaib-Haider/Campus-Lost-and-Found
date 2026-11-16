@@ -13,11 +13,11 @@ steps:
   - step_11_add_editing_a_post: done
   - step_12_add_delete_and_return_actions: done
   - step_13_finish_api_error_handling: done
-  - step_14_connect_account_forms_and_sessions: pending
-  - step_15_connect_board_and_item_details: pending
-  - step_16_connect_posting_and_my_posts: pending
-  - step_17_connect_edit_delete_and_return_actions: pending
-  - step_18_check_project_and_tidy_up: pending
+  - step_14_connect_account_forms_and_sessions: done
+  - step_15_connect_board_and_item_details: done
+  - step_16_connect_posting_and_my_posts: done
+  - step_17_connect_edit_delete_and_return_actions: done
+  - step_18_check_project_and_tidy_up: done
 ---
 
 This project uses only the MERN stack: MongoDB, Express, React, and Node.js. Keep it simple and do not add extra frameworks or unnecessary libraries.
@@ -26,7 +26,7 @@ This project uses only the MERN stack: MongoDB, Express, React, and Node.js. Kee
 
 Build the backend for the Campus Lost & Found Board and connect it to the finished React frontend. Students should be able to use real accounts and save their posts in MongoDB.
 
-There are 18 steps. Steps 1 to 6 are done: the backend connects to local MongoDB, registration and login work, and private requests can verify JWTs and load the current user. Passwords are hashed and checked with bcrypt. Steps 7 to 18 are pending. Mark a step done only after its code is written and its behaviour has been checked. Writing this plan does not count as a development step.
+There are 18 steps. Steps 1 to 6 are done: the backend connects to local MongoDB, registration and login work, and private requests can verify JWTs and load the current user. Passwords are hashed and checked with bcrypt. Steps 7 to 18 are done. Mark a step done only after its code is written and its behaviour has been checked. Writing this plan does not count as a development step.
 
 ## What to use
 
