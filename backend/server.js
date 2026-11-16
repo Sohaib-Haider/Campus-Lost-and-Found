@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import itemRoutes from './routes/itemRoutes.js'
-import errorMiddleware from './middleware/errorMiddleware.js'
+import { handleNotFound, handleServerError } from './middleware/errorMiddleware.js'
 
 
 dotenv.config({ quiet: true })
@@ -23,9 +23,9 @@ app.get('/api/health', (req, res) => {
 })
 
 
-app.use(errorMiddleware.handleNotFound)
+app.use(handleNotFound)
 
-app.use(errorMiddleware.handleServerError)
+app.use(handleServerError)
 
 
 async function startServer() {
