@@ -10,14 +10,19 @@ async function request(path, options = {}) {
   }
 
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-  })
+  let response
+
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers,
+    })
+  } catch {
+    throw new Error('Could not reach the server. Please try again.')
+  }
 
 
   let data = {}
-
 
   try {
     data = await response.json()
@@ -29,18 +34,14 @@ async function request(path, options = {}) {
   if (!response.ok) {
     const error = new Error(data.message || 'Request failed.')
 
-
     error.status = response.status
     error.errors = data.errors
-
 
     throw error
   }
 
 
   return data
-
-
 }
 
 

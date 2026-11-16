@@ -1,11 +1,20 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import ItemActions from '../components/ItemActions.jsx'
 
 
-function MyPostsPage({ items, onLoad, currentUser, onDeleteItem, onReturnItem }) {
+function MyPostsPage({ items, onLoad, onDeleteItem, onReturnItem }) {
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState(null)
+
 
   useEffect(() => {
     onLoad()
+      .then(() => {
+        setError(null)
+        setLoaded(true)
+      })
+      .catch(() => setError('Could not load your posts right now. Please try again.'))
   }, [onLoad])
 
 
@@ -13,7 +22,11 @@ function MyPostsPage({ items, onLoad, currentUser, onDeleteItem, onReturnItem })
     <>
       <h1>My Posts</h1>
 
-      {items.length === 0 ? (
+      {error && <p className="field-error" role="alert">{error}</p>}
+
+      {!loaded && !error ? (
+        <p className="empty-message" role="status">Loading your posts...</p>
+      ) : loaded && items.length === 0 ? (
         <div className="empty-message">
           <p>You have no posts yet.</p>
           <p><Link to="/post-item">Post Item</Link></p>
@@ -35,17 +48,8 @@ function MyPostsPage({ items, onLoad, currentUser, onDeleteItem, onReturnItem })
               <Link to={`/items/${item.id}`}>View details</Link>
               <Link to={`/items/${item.id}/edit`}>Edit</Link>
 
-              <button type="button" onClick={() => {
-                if (window.confirm('Are you sure you want to delete this item?')) {
-                  onDeleteItem(item.id)
-                }
-              }}>Delete</button>
 
-              {!item.returned && (
-                <button type="button" onClick={() => {
-                  onReturnItem(item.id)
-                }}>Mark as returned</button>
-              )}
+              <ItemActions item={item} onDeleteItem={onDeleteItem} onReturnItem={onReturnItem} />
             </article>
           ))}
         </div>

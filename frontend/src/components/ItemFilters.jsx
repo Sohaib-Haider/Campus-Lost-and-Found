@@ -1,4 +1,4 @@
-import { categories, locations } from '../data/sampleItems.js'
+import { categories, locations } from '../data/choices.js'
 
 
 function ItemFilters({ filters, onChange, onClear }) {

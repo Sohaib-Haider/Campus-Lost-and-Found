@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import ItemForm from '../components/ItemForm.jsx'
 
 
-function EditItemPage({ item, itemLoading, currentUser, onEditItem, loadItem }) {
+function EditItemPage({ item, itemLoading, itemError, currentUser, onEditItem, loadItem }) {
   const { id } = useParams()
 
 
@@ -12,7 +12,7 @@ function EditItemPage({ item, itemLoading, currentUser, onEditItem, loadItem }) 
   }, [id, loadItem])
 
 
-  if (itemLoading) {
+  if (itemLoading || (!itemError && (!item || item.id !== id))) {
     return (
       <>
         <p><Link to="/">&larr; Back to the board</Link></p>
@@ -22,12 +22,12 @@ function EditItemPage({ item, itemLoading, currentUser, onEditItem, loadItem }) 
   }
 
 
-  if (!currentUser || !item) {
+  if (itemError) {
     return (
       <>
         <p><Link to="/">&larr; Back to the board</Link></p>
-        <h1>Item not found</h1>
-        <p>We could not find an item with that ID.</p>
+        <h1>Item unavailable</h1>
+        <p>{itemError}</p>
         <Link to="/">Back to the board</Link>
       </>
     )
@@ -46,13 +46,8 @@ function EditItemPage({ item, itemLoading, currentUser, onEditItem, loadItem }) 
   }
 
 
-  function handleSave(updatedItem) {
-    onEditItem(updatedItem, id)
-  }
-
-
   return (
-    <ItemForm item={item} onSave={handleSave} />
+    <ItemForm item={item} onSave={(updatedItem) => onEditItem(updatedItem, id)} />
   )
 
 

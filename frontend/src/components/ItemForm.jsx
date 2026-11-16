@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { categories, locations } from '../data/sampleItems.js'
+import { categories, locations } from '../data/choices.js'
 
 function ItemForm({ onSave, item }) {
   const [type, setType] = useState(item ? item.type : '')
@@ -18,8 +18,18 @@ function ItemForm({ onSave, item }) {
 
   const [errors, setErrors] = useState({})
 
+  const [formError, setFormError] = useState(null)
+
+  const [submitting, setSubmitting] = useState(false)
+
   function handleSubmit(event) {
     event.preventDefault()
+
+    if (submitting) {
+      return
+    }
+
+    setFormError(null)
 
     const newErrors = {}
 
@@ -45,7 +55,7 @@ function ItemForm({ onSave, item }) {
 
     if (!itemDate) {
       newErrors.itemDate = 'Please pick a date.'
-    } else if (new Date(itemDate) > new Date()) {
+    } else if (itemDate > new Date().toLocaleDateString('en-CA')) {
       newErrors.itemDate = 'Date cannot be in the future.'
     }
 
@@ -65,13 +75,25 @@ function ItemForm({ onSave, item }) {
         contact: contact.trim(),
         type: type,
       }
-      onSave(formData)
+      setSubmitting(true)
+
+      onSave(formData).catch((error) => {
+        setSubmitting(false)
+
+        if (error.errors) {
+          setErrors(error.errors)
+        } else {
+          setFormError(error.message || 'Could not save the item. Please try again.')
+        }
+      })
     }
   }
 
   return (
     <form className="account-form" onSubmit={handleSubmit} noValidate>
       <h1>{item ? 'Edit Item' : 'Post an Item'}</h1>
+
+      {formError && <p className="field-error" role="alert">{formError}</p>}
 
       <div className="form-field">
         <label htmlFor="form-type">Lost or found</label>
@@ -119,7 +141,7 @@ function ItemForm({ onSave, item }) {
 
       <div className="form-field">
         <label htmlFor="form-date">Date</label>
-        <input id="form-date" aria-invalid={Boolean(errors.itemDate)} aria-describedby={errors.itemDate ? 'form-date-error' : undefined} type="date" value={itemDate} onChange={(event) => setItemDate(event.target.value)} />
+        <input id="form-date" aria-invalid={Boolean(errors.itemDate)} aria-describedby={errors.itemDate ? 'form-date-error' : undefined} type="date" max={new Date().toLocaleDateString('en-CA')} value={itemDate} onChange={(event) => setItemDate(event.target.value)} />
         {errors.itemDate && <p className="field-error" id="form-date-error">{errors.itemDate}</p>}
       </div>
 
@@ -129,7 +151,7 @@ function ItemForm({ onSave, item }) {
         {errors.contact && <p className="field-error" id="form-contact-error">{errors.contact}</p>}
       </div>
 
-      <button type="submit">{item ? 'Update Item' : 'Post Item'}</button>
+      <button type="submit" disabled={submitting}>{item ? 'Update Item' : 'Post Item'}</button>
     </form>
   )
 }

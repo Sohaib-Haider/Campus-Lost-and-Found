@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react'
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { request } from './api/api.js'
 import PageLayout from './components/PageLayout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
@@ -34,10 +34,11 @@ function App() {
         try {
           const data = await request('/api/auth/me', { token })
 
-
           setCurrentUser(data.user)
-        } catch {
-          localStorage.removeItem('lostFoundToken')
+        } catch (error) {
+          if (error.status === 401) {
+            localStorage.removeItem('lostFoundToken')
+          }
         }
       }
 
@@ -47,6 +48,23 @@ function App() {
 
 
     loadSession()
+  }, [])
+
+
+  const privateRequest = useCallback(async (path, options = {}) => {
+    const token = localStorage.getItem('lostFoundToken')
+
+
+    try {
+      return await request(path, { ...options, token })
+    } catch (error) {
+      if (error.status === 401) {
+        localStorage.removeItem('lostFoundToken')
+        setCurrentUser(null)
+      }
+
+      throw error
+    }
   }, [])
 
 
@@ -79,14 +97,13 @@ function App() {
   function handleLogout() {
     localStorage.removeItem('lostFoundToken')
     setCurrentUser(null)
-    setBoardItems([])
     setMyItems([])
     setItem(null)
     navigate('/login')
   }
 
 
-  async function loadBoardItems(filters) {
+  const loadBoardItems = useCallback(async (filters) => {
     boardRequestId.current += 1
     const myRequestId = boardRequestId.current
 
@@ -110,24 +127,28 @@ function App() {
     }
 
 
-    const data = await request(`/api/items?${params}`)
+    try {
+      const data = await request(`/api/items?${params}`)
 
-    if (myRequestId === boardRequestId.current) {
-      setBoardItems(data.items)
+      if (myRequestId === boardRequestId.current) {
+        setBoardItems(data.items)
+      }
+    } catch (error) {
+      if (myRequestId === boardRequestId.current) {
+        throw error
+      }
     }
-  }
+  }, [])
 
 
-  async function loadMyItems() {
-    const token = localStorage.getItem('lostFoundToken')
-    const data = await request('/api/items/mine', { token })
-
+  const loadMyItems = useCallback(async () => {
+    const data = await privateRequest('/api/items/mine')
 
     setMyItems(data.items)
-  }
+  }, [privateRequest])
 
 
-  async function loadItem(id) {
+  const loadItem = useCallback(async (id) => {
     setItemLoading(true)
     setItemError(null)
     setItem(null)
@@ -136,104 +157,84 @@ function App() {
     try {
       const data = await request(`/api/items/${id}`)
 
-
       setItem(data.item)
     } catch (error) {
-      if (error.status === 404) {
-        setItemError('Item not found.')
+      if (error.status === 404 || error.status === 400) {
+        setItemError('We could not find an item with that ID.')
       } else {
-        setItemError('Could not load the item right now.')
+        setItemError('Could not load the item right now. Please try again.')
       }
     }
 
 
     setItemLoading(false)
-  }
+  }, [])
 
 
   async function handleAddItem(formData) {
-    const token = localStorage.getItem('lostFoundToken')
-    const data = await request('/api/items', {
+    const data = await privateRequest('/api/items', {
       method: 'POST',
       body: JSON.stringify(formData),
-      token,
     })
 
 
-    await loadBoardItems()
     navigate(`/items/${data.item.id}`)
   }
 
 
   async function handleEditItem(updatedItem, id) {
-    const token = localStorage.getItem('lostFoundToken')
-    await request(`/api/items/${id}`, {
+    await privateRequest(`/api/items/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedItem),
-      token,
     })
 
 
-    await loadMyItems()
     navigate(`/items/${id}`)
   }
 
 
   async function handleDeleteItem(id) {
-    const token = localStorage.getItem('lostFoundToken')
-    await request(`/api/items/${id}`, {
-      method: 'DELETE',
-      token,
-    })
+    await privateRequest(`/api/items/${id}`, { method: 'DELETE' })
 
 
-    setBoardItems(boardItems.filter((currentItem) => currentItem.id !== id))
-    setMyItems(myItems.filter((currentItem) => currentItem.id !== id))
-    navigate('/')
+    setBoardItems((items) => items.filter((currentItem) => currentItem.id !== id))
+    setMyItems((items) => items.filter((currentItem) => currentItem.id !== id))
   }
 
 
   async function handleReturnItem(id) {
-    const token = localStorage.getItem('lostFoundToken')
-    await request(`/api/items/${id}/returned`, {
-      method: 'PATCH',
-      token,
-    })
+    const data = await privateRequest(`/api/items/${id}/returned`, { method: 'PATCH' })
 
 
-    setBoardItems(boardItems.map((currentItem) => currentItem.id === id ? { ...currentItem, returned: true } : currentItem))
-    setMyItems(myItems.map((currentItem) => currentItem.id === id ? { ...currentItem, returned: true } : currentItem))
+    setBoardItems((items) => items.filter((currentItem) => currentItem.id !== id))
+    setMyItems((items) => items.map((currentItem) => currentItem.id === id ? data.item : currentItem))
+    setItem((currentItem) => currentItem && currentItem.id === id ? data.item : currentItem)
   }
 
 
   if (loading) {
     return (
-      <>
-        <PageLayout currentUser={null} onLogout={handleLogout} />
+      <PageLayout currentUser={null} onLogout={handleLogout}>
         <p className="empty-message" role="status">Checking your session...</p>
-      </>
+      </PageLayout>
     )
   }
 
 
   return (
-    <BrowserRouter>
-      <PageLayout currentUser={currentUser} onLogout={handleLogout}>
-        <Routes>
-          <Route path="/" element={<BoardPage items={boardItems} onLoad={loadBoardItems} />} />
-          <Route path="/items/:id" element={<ItemDetailsPage item={item} itemLoading={itemLoading} itemError={itemError} loadItem={loadItem} currentUser={currentUser} onDeleteItem={handleDeleteItem} onReturnItem={handleReturnItem} />} />
-          <Route path="/register" element={<RegisterPage onRegister={handleRegister} />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          <Route path="/post-item" element={<ProtectedRoute currentUser={currentUser}><PostItemPage onAddItem={handleAddItem} /></ProtectedRoute>} />
-          <Route path="/my-posts" element={<ProtectedRoute currentUser={currentUser}><MyPostsPage items={myItems} onLoad={loadMyItems} currentUser={currentUser} onDeleteItem={handleDeleteItem} onReturnItem={handleReturnItem} /></ProtectedRoute>} />
-          <Route path="/items/:id/edit" element={<ProtectedRoute currentUser={currentUser}><EditItemPage item={item} itemLoading={itemLoading} currentUser={currentUser} onEditItem={handleEditItem} loadItem={loadItem} /></ProtectedRoute>} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </PageLayout>
-    </BrowserRouter>
+    <PageLayout currentUser={currentUser} onLogout={handleLogout}>
+      <Routes>
+        <Route path="/" element={<BoardPage items={boardItems} onLoad={loadBoardItems} />} />
+        <Route path="/items/:id" element={<ItemDetailsPage item={item} itemLoading={itemLoading} itemError={itemError} loadItem={loadItem} currentUser={currentUser} onDeleteItem={handleDeleteItem} onReturnItem={handleReturnItem} />} />
+        <Route path="/register" element={<RegisterPage onRegister={handleRegister} />} />
+        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        <Route path="/post-item" element={<ProtectedRoute currentUser={currentUser}><PostItemPage onAddItem={handleAddItem} /></ProtectedRoute>} />
+        <Route path="/my-posts" element={<ProtectedRoute currentUser={currentUser}><MyPostsPage items={myItems} onLoad={loadMyItems} onDeleteItem={handleDeleteItem} onReturnItem={handleReturnItem} /></ProtectedRoute>} />
+        <Route path="/items/:id/edit" element={<ProtectedRoute currentUser={currentUser}><EditItemPage item={item} itemLoading={itemLoading} itemError={itemError} currentUser={currentUser} onEditItem={handleEditItem} loadItem={loadItem} /></ProtectedRoute>} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </PageLayout>
   )
-
-
 }
 
 

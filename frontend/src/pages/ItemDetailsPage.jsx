@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import ItemActions from '../components/ItemActions.jsx'
 
 
 function ItemDetailsPage({ item, itemLoading, itemError, loadItem, currentUser, onDeleteItem, onReturnItem }) {
   const { id } = useParams()
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -11,7 +13,7 @@ function ItemDetailsPage({ item, itemLoading, itemError, loadItem, currentUser, 
   }, [id, loadItem])
 
 
-  if (itemLoading) {
+  if (itemLoading || (!itemError && (!item || item.id !== id))) {
     return (
       <>
         <p><Link to="/">&larr; Back to the board</Link></p>
@@ -25,20 +27,8 @@ function ItemDetailsPage({ item, itemLoading, itemError, loadItem, currentUser, 
     return (
       <>
         <p><Link to="/">&larr; Back to the board</Link></p>
-        <h1>Item not found</h1>
+        <h1>Item unavailable</h1>
         <p>{itemError}</p>
-        <Link to="/">Back to the board</Link>
-      </>
-    )
-  }
-
-
-  if (!item) {
-    return (
-      <>
-        <p><Link to="/">&larr; Back to the board</Link></p>
-        <h1>Item not found</h1>
-        <p>We could not find an item with that ID.</p>
         <Link to="/">Back to the board</Link>
       </>
     )
@@ -82,19 +72,7 @@ function ItemDetailsPage({ item, itemLoading, itemError, loadItem, currentUser, 
         </dl>
 
         {isOwner && (
-          <div className="item-actions">
-            <button type="button" onClick={() => {
-              if (window.confirm('Are you sure you want to delete this item?')) {
-                onDeleteItem(item.id)
-              }
-            }}>Delete</button>
-
-            {!item.returned && (
-              <button type="button" onClick={() => {
-                onReturnItem(item.id)
-              }}>Mark as returned</button>
-            )}
-          </div>
+          <ItemActions item={item} onDeleteItem={onDeleteItem} onReturnItem={onReturnItem} onDeleted={() => navigate('/')} />
         )}
       </article>
     </>
